@@ -1,0 +1,43 @@
+const axios = require('axios');
+const cheerio = require('cheerio');
+
+async function parseProductsFromWebsite(url) {
+    try {
+        // Отправляем GET-запрос к указанной веб-странице
+        const response = await axios.get(url);
+        
+        // Используем Cheerio для разбора содержимого HTML
+        const $ = cheerio.load(response.data);
+        
+        // Находим все элементы, содержащие названия продуктов
+        const productTitles = $('h2.product-title');
+        
+        // Создаем массив для хранения результатов
+        const products = [];
+        
+        // Извлекаем текст из найденных элементов и добавляем в массив
+        productTitles.each((index, element) => {
+            products.push($(element).text().trim());
+        });
+        
+        return products;
+    } catch (error) {
+        console.error(`Ошибка при запросе: ${error.message}`);
+        return [];
+    }
+}
+
+// Пример использования парсера
+(async () => {
+    const url = "https://example.com/products"; // Замените на URL интересующей вас страницы
+    const productsList = await parseProductsFromWebsite(url);
+    
+    if (productsList.length > 0) {
+        console.log("Найденные продукты:");
+        productsList.forEach(product => {
+            console.log(product);
+        });
+    } else {
+        console.log("Продукты не найдены.");
+    }
+})();
