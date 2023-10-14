@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+# Open the input file
+open(my $input_file, '<', 'input.txt') or die "Could not open input file: $!";
+
+# Open the output file
+open(my $output_file, '>', 'output.txt') or die "Could not open output file: $!";
+
+# Loop through each line of the input file
+while (my $line = <$input_file>) {
+    # Split the line into fields using a tab delimiter
+    my @fields = split(/\t/, $line);
+
+    # Extract the desired fields
+    my $field1 = $fields[0];
+    my $field2 = $fields[1];
+
+    # Write the extracted fields to the output file
+    print $output_file "$field1,$field2\n";
+}
+
+# Close the input and output files
+close($input_file);
+close($output_file);
